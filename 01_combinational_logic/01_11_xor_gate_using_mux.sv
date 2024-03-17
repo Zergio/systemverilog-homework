@@ -18,12 +18,14 @@ module xor_gate_using_mux
     output o
 );
 
+
   // TODO
 
   // Implement xor gate using instance(s) of mux,
   // constants 0 and 1, and wire connections
 
 
+  mux inst(b, ~ b, a, o);
 endmodule
 
 //----------------------------------------------------------------------------

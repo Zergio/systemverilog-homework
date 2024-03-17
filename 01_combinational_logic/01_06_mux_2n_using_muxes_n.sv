@@ -13,8 +13,8 @@ endmodule
 
 module mux_4_1
 (
-  input  [3:0] d0, d1, d2, d3,
-  input  [1:0] sel,
+  input wire  [3:0] d0, d1, d2, d3,
+  input wire [1:0] sel,
   output [3:0] y
 );
 
@@ -22,29 +22,29 @@ module mux_4_1
 
   // Implement mux_4_1 using three instances of mux_2_1
 
-  assign tty = 0;
-  assign ttty = 0;
+  wire [3:0] out1;
+  wire [3:0] out2;
 
-  mux_2_1 inst1
-  (
-    .d0  (d1), .d1 (d0),
-    .sel (sel[0]),
-    .y   (ttty)
-  );
+    mux_2_1 inst1
+    (
+      .d0  (d0), .d1 (d1),
+      .sel (sel[0]),
+      .y   (out1)
+    );
 
-  mux_2_1 inst2
-  (
-    .d0  (d3), .d1(d2),
-    .sel (sel[0]),
-    .y   (tty)
-  );
+    mux_2_1 inst2
+    (
+      .d0  (d2), .d1(d3),
+      .sel (sel[0]),
+      .y   (out2)
+    );
 
-  mux_2_1 inst3
-  (
-    .d0  (ttty), .d1(tty),
-    .sel (sel[1]),
-    .y   (y)
-  );
+    mux_2_1 inst3
+    (
+      .d0  (out1), .d1(out2),
+      .sel (sel[1]),
+      .y   (y)
+    );
 
 
 endmodule
