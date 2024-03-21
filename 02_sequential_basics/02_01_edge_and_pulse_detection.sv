@@ -32,7 +32,21 @@ module one_cycle_pulse_detector (input clk, rst, a, output detected);
   // Note:
   // See the testbench for the output format ($display task).
 
+  logic a1_r;
+  logic a2_r;
 
+  always_ff @ (posedge clk)
+    begin
+      if (rst) begin
+        a1_r <= '0;
+        a2_r <= '0;
+      end else begin
+        a1_r <= a;
+        a2_r <= a1_r;
+      end
+    end
+
+  assign detected = ~ a2_r & a1_r & ~ a;
 endmodule
 
 //----------------------------------------------------------------------------
@@ -45,6 +59,9 @@ module testbench;
 
   initial
   begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, testbench);
+
     clk = '0;
 
     forever

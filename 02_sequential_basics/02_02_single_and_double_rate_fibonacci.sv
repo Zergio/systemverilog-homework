@@ -34,6 +34,23 @@ module fibonacci_2
   // Task:
   // Implement a module that generates two fibonacci numbers per cycle
 
+  reg logic [15:0] num1_r;
+  reg logic [15:0] num2_r;
+
+  always_ff @ (posedge clk)
+  begin
+    if (rst)
+      begin
+        num1_r <= 16'd1;
+        num2_r <= 16'd1;
+      end else begin
+        num1_r <= num1_r + num2_r;
+        num2_r <= num1_r + num2_r + num2_r;
+      end
+  end
+
+  assign num  = num1_r;
+  assign num2 = num2_r;
 
 endmodule
 
@@ -47,6 +64,10 @@ module testbench;
 
   initial
   begin
+
+    $dumpfile("dump.vcd");
+    $dumpvars(0, testbench);
+
     clk = 0;
 
     forever
