@@ -68,6 +68,35 @@ module serial_comparator_most_significant_first_using_fsm
   // but use the Finite State Machine to evaluate the result.
   // Most significant bits arrive first.
 
+  enum logic[1:0]
+  {
+     st_equal       = 2'b00,
+     st_a_less_b    = 2'b01,
+     st_a_greater_b = 2'b10
+  }
+  state, new_state;
+
+  always_comb
+  begin
+    new_state = state;
+
+    case (state)
+      st_equal       : if (  a & ~ b) new_state = st_a_greater_b;
+                  else if (~ a &   b) new_state =    st_a_less_b;
+                  else                new_state =       st_equal;
+      default        :                new_state =          state;
+    endcase
+  end
+
+  assign a_eq_b      = (state ==       st_equal);
+  assign a_less_b    = (state ==    st_a_less_b);
+  assign a_greater_b = (state == st_a_greater_b);
+
+  always_ff @ (posedge clk)
+    if (rst)
+      state = st_equal;
+    else
+      state = new_state;
 
 endmodule
 
@@ -81,6 +110,10 @@ module testbench;
 
   initial
   begin
+
+    $dumpfile("dump.vcd");
+    $dumpvars(0, testbench);
+
     clk = '0;
 
     forever

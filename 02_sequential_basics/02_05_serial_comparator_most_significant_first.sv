@@ -58,6 +58,27 @@ module serial_comparator_most_significant_first
   //
   // See the testbench for the output format ($display task).
 
+  logic less_r;
+  logic equal_r;
+  logic latch;
+
+  always_ff @ (posedge clk, negedge clk) begin
+    if (rst) begin
+      equal_r = '1;
+      less_r  = '0;
+      latch   = '0;
+    end else if ((a ^ b) && !latch) begin
+      equal_r = '0;
+      less_r  = !a;
+      latch   = '1;
+    end else if (!latch)
+      equal_r = !(a ^ b);
+  end
+
+  assign a_less_b    = less_r ;
+  assign a_eq_b      = equal_r;
+  assign a_greater_b = ((!equal_r) & (!less_r));
+
 
 endmodule
 
@@ -71,6 +92,9 @@ module testbench;
 
   initial
   begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, testbench);
+
     clk = '0;
 
     forever
