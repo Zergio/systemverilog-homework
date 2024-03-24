@@ -64,13 +64,13 @@ module serial_comparator_most_significant_first
 
   always_ff @ (posedge clk, negedge clk) begin
     if (rst) begin
-      equal_r = '1;
-      less_r  = '0;
-      latch   = '0;
+      equal_r <= '1;
+      less_r  <= '0;
+      latch   <= '0;
     end else if ((a ^ b) && !latch) begin
-      equal_r = '0;
-      less_r  = !a;
-      latch   = '1;
+      equal_r <= '0;
+      less_r  <= !a;
+      latch   <= '1;
     end else if (!latch)
       equal_r = !(a ^ b);
   end
