@@ -88,15 +88,15 @@ module serial_comparator_most_significant_first_using_fsm
     endcase
   end
 
-  assign a_eq_b      = (state ==       st_equal);
-  assign a_less_b    = (state ==    st_a_less_b);
-  assign a_greater_b = (state == st_a_greater_b);
+  assign a_eq_b      = (state ==       st_equal) &&  (~ (a ^   b));
+  assign a_less_b    = (state ==    st_a_less_b) || ((~  a &   b) && (state == st_equal));
+  assign a_greater_b = (state == st_a_greater_b) || ((   a & ~ b) && (state == st_equal));
 
   always_ff @ (posedge clk)
     if (rst)
-      state = st_equal;
+      state <= st_equal;
     else
-      state = new_state;
+      state <= new_state;
 
 endmodule
 
@@ -111,8 +111,8 @@ module testbench;
   initial
   begin
 
-    $dumpfile("dump.vcd");
-    $dumpvars(0, testbench);
+    //$dumpfile("dump.vcd");
+    //$dumpvars(0, testbench);
 
     clk = '0;
 

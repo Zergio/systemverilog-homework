@@ -41,7 +41,7 @@ module fibonacci_2
   begin
     if (rst)
       begin
-        num1_r <= 16'd1;
+        num1_r <= 16'd1; //Can also do { num1_r, num2_r } <= { 16'd1, 26'd1 };
         num2_r <= 16'd1;
       end else begin
         num1_r <= num1_r + num2_r;
